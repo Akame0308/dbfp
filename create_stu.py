@@ -1,5 +1,5 @@
 
-load = lambda x:[x[0:12].replace(b"\x00",b"").decode(),x[12:16].replace(b"\x00",b"").decode(),x[16:64].replace(b"\x00",b"").decode()]
+load = lambda x:[x[0:12].replace(b"\x00",b"").decode(),int.from_bytes(x[12:16],byteorder="little"),x[16:64].replace(b"\x00",b"").decode()]
 
 
 def generate():
@@ -18,5 +18,5 @@ l.sort(key = lambda x:x[1])
 with open("student.dat","wb") as f:
     for index,student_id in l:
         s = b"%12b"%(student_id.encode())
-        f.write(s.replace(b"\x20",b"\x00")+index.to_bytes(4,byteorder="big"))
+        f.write(s.replace(b"\x20",b"\x00")+index.to_bytes(4,byteorder="little"))
 

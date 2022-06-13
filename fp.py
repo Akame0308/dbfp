@@ -1,11 +1,11 @@
 import os
 
-#debug = print
-debug = lambda *x:None
+debug = print
+#debug = lambda *x:None
 
 def get_datas_by_index(indexes):
     with open("data.dat","r+b") as f:
-        load_ind = lambda x:[x[0:12].replace(b"\x00",b"").decode(),x[12:16].replace(b"\x00",b"").decode(),x[16:64].replace(b"\x00",b"").decode()]
+        load_ind = lambda x:[x[0:12].replace(b"\x00",b"").decode(),int.from_bytes(x[12:16],byteorder="little"),x[16:64].replace(b"\x00",b"").decode()]
         res = []
         for index in indexes:
             f.seek(index*64)
@@ -14,7 +14,7 @@ def get_datas_by_index(indexes):
     return res
 
 def get_by_student_id(index):
-    load_stu = lambda x:[x[0:12].replace(b"\x00",b"").decode(),int.from_bytes(x[12:16],byteorder="big")]
+    load_stu = lambda x:[x[0:12].replace(b"\x00",b"").decode(),int.from_bytes(x[12:16],byteorder="little")]
     with open("student.dat","r+b") as file:
         file.seek(index*16)
         data = file.read(16)
@@ -57,7 +57,7 @@ def search_by_student_id(student_id):
     
 
 def get_by_course_id(index):
-    load_cou = lambda x:[x[0:4].replace(b"\x00",b"").decode(),int.from_bytes(x[4:8],byteorder="big")]
+    load_cou = lambda x:[int.from_bytes(x[0:4],byteorder="little"),int.from_bytes(x[4:8],byteorder="little")]
     with open("course.dat","r+b") as file:
         file.seek(index*8)
         data = file.read(8)
@@ -114,7 +114,7 @@ while True:
         res.sort(key=lambda x:x[1])
         print("\n".join(map(lambda x:" ".join(x),res)))
     elif l[0].lower() in ("c","course"):
-        res = search_by_course_id(l[1])
+        res = search_by_course_id(int(l[1]))
         res = get_datas_by_index(res)
-        res.sort(key=lambda x:x[1])
-        print("\n".join(map(lambda x:" ".join(x),res)))
+        res.sort(key=lambda x:x[0])
+        print("\n".join(map(lambda x:"{:10s} {:04d} {:s}".format(*x),res)))

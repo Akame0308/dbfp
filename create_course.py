@@ -1,5 +1,8 @@
 
-load = lambda x:[x[0:12].replace(b"\x00",b"").decode(),x[12:16].replace(b"\x00",b"").decode(),x[16:64].replace(b"\x00",b"").decode()]
+from sys import byteorder
+
+
+load = lambda x:[x[0:12].replace(b"\x00",b"").decode(),int.from_bytes(x[12:16],byteorder="little"),x[16:64].replace(b"\x00",b"").decode()]
 
 
 def generate():
@@ -17,6 +20,6 @@ l.sort(key = lambda x:x[1])
 
 with open("course.dat","wb") as f:
     for index,course in l:
-        s = b"%4b"%(course.encode())
-        f.write(s.replace(b"\x20",b"\x00")+index.to_bytes(4,byteorder="big"))
+        s = course.to_bytes(4,byteorder="little")
+        f.write(s+index.to_bytes(4,byteorder="little"))
 

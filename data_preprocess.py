@@ -8,6 +8,6 @@ data = list(map(lambda x:x.split(","),data))
 
 with open("output.dat","wb") as f:
     for d in data:
-        line = b"%-12b%-4b%-48b"%(d[0].encode(),d[1].encode(),d[2].encode())
+        line = b"%-12b%-4b%-48b"%(d[0].encode(),int(d[1]).to_bytes(4,byteorder="little"),d[2].encode())
         line = line.replace(b"\x20",b"\x00")
         l = f.write(line)
