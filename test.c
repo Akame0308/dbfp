@@ -12,7 +12,7 @@ int main(void)
 {
     struct data test;
     memset(&test,0,sizeof(struct data));
-    FILE* f = fopen("data.dat","r+b");
+    FILE* f = fopen("data.dat","rb+");
     int tmp =0;
     while(1)
     {
