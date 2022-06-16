@@ -1,8 +1,7 @@
 
-from sys import byteorder
 
 
-load = lambda x:[x[0:12].replace(b"\x00",b"").decode(),int.from_bytes(x[12:16],byteorder="little"),x[16:64].replace(b"\x00",b"").decode()]
+load = lambda x:[x[0:12].replace(b"\x00",b" ").decode().strip(),int.from_bytes(x[12:16],byteorder="little"),x[16:64].replace(b"\x00",b" ").decode().strip()]
 
 
 def generate():
